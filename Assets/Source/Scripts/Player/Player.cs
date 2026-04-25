@@ -1,94 +1,80 @@
 using Source.Scripts.Game;
+using Source.Scripts.Interfaces;
+using Source.Scripts.Other;
+using Source.Scripts.Player.PlayerStates;
 using UnityEngine;
 
 namespace Source.Scripts.Player
 {
-    [RequireComponent(typeof(PlayerTeleporter), typeof(PlayerShooter), typeof(InputReader))]
-    [RequireComponent(typeof(PlayerRotater), typeof(PlayerPointer), typeof(PlayerEnergy))]
-    public class Player : MonoBehaviour
+    [RequireComponent(typeof(InputReader), typeof(PlayerPointer), typeof(PlayerRotater))]
+    [RequireComponent(typeof(PlayerShooter), typeof(PlayerTeleporter), typeof(PlayerEnergy))]
+    public class Player : MonoBehaviour, IHealthObject
     {
-        private Collider _collider;
-        private Rigidbody _rigidbody;
-        private InputReader _inputReader;
-        private PlayerTeleporter _teleporter;
-        private PlayerShooter _shooter;
-        private PlayerRotater _rotater;
+        [SerializeField] public int _maxHealth;
+        
+        private PlayerStateMachine _stateMachine;
+        private PlayerIdleState _idleState;
+        private PlayerAimState _aimState;
+        private PlayerThrowState _throwState;
+        private PlayerTeleportState _teleportState;
+        
         private PlayerPointer _pointer;
+        private PlayerRotater _rotater;
+        private PlayerShooter _shooter;
+        private PlayerTeleporter _teleporter;
         private PlayerEnergy _energy;
-
-        private bool _isAiming;
+        private Health _health;
+        
+        private Rigidbody _rigidbody;
+        private Collider _collider;
+        
+        public InputReader InputReader {get; private set;}
 
         private void Awake()
         {
-            _collider = GetComponent<Collider>();
-            _rigidbody = GetComponent<Rigidbody>();
-            _shooter = GetComponent<PlayerShooter>();
-            _teleporter = GetComponent<PlayerTeleporter>();
-            _inputReader = GetComponent<InputReader>();
-            _rotater = GetComponent<PlayerRotater>();
+            InputReader = GetComponent<InputReader>();
             _pointer = GetComponent<PlayerPointer>();
+            _rotater = GetComponent<PlayerRotater>();
+            _shooter = GetComponent<PlayerShooter>();
             _energy = GetComponent<PlayerEnergy>();
-
+            _teleporter = GetComponent<PlayerTeleporter>();
+            
+            _rigidbody = GetComponent<Rigidbody>();
+            _collider = GetComponent<Collider>();
+            
             Initialize();
         }
 
-        private void OnEnable()
+        private void Start()
         {
-            _inputReader.OnTeleportKeyPress += TryTeleport;
-            _inputReader.OnMouseMoved += Rotate;
-            _inputReader.OnMouseOver += TryAttack;
-            _rotater.OnRotationChanged += ChangeDirection;
+            _stateMachine.SetState(_idleState);
         }
 
-        private void OnDisable()
+        public void HandleDamage(int damage)
         {
-            _inputReader.OnTeleportKeyPress -= TryTeleport;
-            _inputReader.OnMouseMoved -= Rotate;
-            _inputReader.OnMouseOver -= TryAttack;
-            _rotater.OnRotationChanged -= ChangeDirection;
+            //Добавить валидацию
+            _health.TakeDamage(damage);
         }
-
+        
         private void Initialize()
         {
-            _teleporter.Initialize(_collider, _rigidbody);
+            _health = new Health(_maxHealth);
+            
+            _stateMachine = new PlayerStateMachine();
+            
+            _idleState = new PlayerIdleState(this,  _stateMachine);
+            _aimState = new PlayerAimState(this,  _stateMachine);
+            _throwState = new PlayerThrowState(this,  _stateMachine);
+            _teleportState = new PlayerTeleportState(this, _stateMachine);
+            
+            _idleState.Initialize(_aimState);
+            _aimState.Initialize(_throwState, _pointer, _rotater);
+            _throwState.Initialize(_aimState, _teleportState, _energy, _shooter);
+            _teleportState.Initialize(_aimState, _teleporter);
+            
             _shooter.Initialize(_rigidbody);
+            _teleporter.Initialize(_collider, _rigidbody);
         }
 
-        private void TryTeleport(Vector3 mousePos)
-        {
-            if (_energy.TryUseEnergy())
-            {
-                _rotater.SetStartPosition(mousePos);
-
-                _teleporter.Teleport();
-                _pointer.GetObject();
-
-                _isAiming = true;
-            }
-        }
-
-        private void Rotate(Vector3 newPosition)
-        {
-            if (_isAiming)
-            {
-                _rotater.Rotate(newPosition);
-            }
-        }
-
-        private void TryAttack()
-        {
-            if (_isAiming)
-            {
-                _pointer.ReleaseObject();
-                _shooter.Attack(_rotater.Direction);
-                
-                _isAiming = false;
-            }
-        }
-
-        private void ChangeDirection(Vector3 newDirection)
-        {
-            _pointer.ChangeRotation(newDirection);
-        }
     }
 }

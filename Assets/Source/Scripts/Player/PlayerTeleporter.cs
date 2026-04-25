@@ -1,4 +1,5 @@
 using Source.Scripts.Utillities;
+using Source.Scripts.Weapons;
 using UnityEngine;
 
 namespace Source.Scripts.Player

@@ -1,12 +1,17 @@
+using Source.Scripts.Player;
+using Source.Scripts.Weapons;
 using UnityEngine;
 
-public class WeaponFollower : MonoBehaviour
+namespace Source.Scripts.Utillities
 {
-    [SerializeField] private Camera _camera;
-    [SerializeField] private Weapon _weapon;
-
-    private void Update()
+    public class WeaponFollower : MonoBehaviour
     {
-        transform.position = new Vector3(_weapon.transform.position.x, _weapon.transform.position.y, transform.position.z);
+        [SerializeField] private Camera _camera;
+        [SerializeField] private Weapon _weapon;
+
+        private void Update()
+        {
+            transform.position = new Vector3(_weapon.transform.position.x, _weapon.transform.position.y, transform.position.z);
+        }
     }
 }

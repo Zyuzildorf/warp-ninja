@@ -1,4 +1,4 @@
-using System;
+using Source.Scripts.Weapons;
 using UnityEngine;
 
 namespace Source.Scripts.Player
@@ -7,7 +7,7 @@ namespace Source.Scripts.Player
     {
         [SerializeField] private Weapon _weapon;
         [SerializeField] private Transform _shootPoint;
-        [SerializeField] private float _speed;
+        [SerializeField] private float _speed = 10f;
 
         private Rigidbody _rigidbody;
 
@@ -18,7 +18,10 @@ namespace Source.Scripts.Player
         
         public void Attack(Vector3 direction)
         {
+            direction.z = 0;
+            Debug.Log("Direction: " + direction);
             _weapon.Get();
+            
             _weapon.transform.position = new Vector3(_shootPoint.position.x, _shootPoint.position.y, 0);
             _weapon.transform.rotation = Quaternion.LookRotation(direction);
             
