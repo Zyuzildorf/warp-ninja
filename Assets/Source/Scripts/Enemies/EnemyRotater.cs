@@ -2,18 +2,18 @@ using UnityEngine;
 
 namespace Source.Scripts.Enemies
 {
-    public class EnemyRotater : MonoBehaviour
+    public class EnemyRotater
     {
-        private Transform _target;
-        
-        public void Rotate()
-        {
-            transform.rotation =  Quaternion.LookRotation(_target.position - transform.position);
-        }
+        private readonly Transform _transform;
 
-        public void SetTarget(Transform target)
+        public EnemyRotater(Transform transform)
         {
-            _target = target;
+            _transform = transform;
+        }
+        
+        public void Rotate(Vector3 target)
+        {
+            _transform.rotation =  Quaternion.LookRotation(target - _transform.position);
         }
     }
 }

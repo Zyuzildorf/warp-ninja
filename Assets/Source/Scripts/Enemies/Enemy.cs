@@ -9,14 +9,17 @@ namespace Source.Scripts.Enemies
     {
         [SerializeField] private int _maxHealth;
         
+        [SerializeField] private MoveStrategy _searchMoveStrategy;
+        [SerializeField] private MoveStrategy _hostileMoveStrategy;
+        [SerializeField] private HostileStrategy _hostileStrategy;
+        
         private EnemySearchState _searchState;
         private EnemyHostileState  _hostileState;
         private EnemyStateMachine _stateMachine;
-
-        private IHostilePattern _hostilePattern;
-        private IMovePattern _movePattern;
+        
         private ISearchPattern _searchPattern;
         private TargetFinder _targetFinder;
+        
         private Health _health;
 
         private void Awake()

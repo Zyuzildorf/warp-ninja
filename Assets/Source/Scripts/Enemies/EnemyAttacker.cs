@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace Source.Scripts.Enemies
 {
-    public class EnemyAttacker : MonoBehaviour, IHostilePattern
+    public class EnemyAttacker : MonoBehaviour
     {
         [SerializeField] private float _distance;
         [SerializeField] private int _damage;

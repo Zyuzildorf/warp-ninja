@@ -1,25 +1,30 @@
-using Source.Scripts.Interfaces;
 using UnityEngine;
 
 namespace Source.Scripts.Enemies
 {
-    public class EnemyMover :  MonoBehaviour, IMovePattern
+    public class EnemyMover : Mover
     {
-        [SerializeField] protected float _speed;
-        
-        private Transform _target;
-        protected Rigidbody Rigidbody;
-        
-        public virtual void Move()
+        public EnemyMover(Transform transform, Rigidbody rigidbody)
         {
-            Vector3 direction = _target.position - transform.position;
-            
-            Rigidbody.velocity = direction.normalized * _speed;
+            Rigidbody = rigidbody;
+            Transform = transform;
         }
 
-        public void SetTarget(Transform target)
+        public override void Move()
         {
-            _target = target;
+            Vector3 direction = Target.position - Transform.position;
+
+            Rigidbody.velocity = direction.normalized * Speed;
+        }
+
+        public override void SetSpeed(float speed)
+        {
+            Speed = speed;
+        }
+
+        public override void SetTarget(Transform target)
+        {
+            Target = target;
         }
     }
 }

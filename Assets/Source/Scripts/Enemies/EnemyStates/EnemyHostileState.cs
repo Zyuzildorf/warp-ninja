@@ -7,48 +7,32 @@ namespace Source.Scripts.Enemies.EnemyStates
     {
         private EnemySearchState  _searchState;
         
-        private EnemyMover _mover;
-        private EnemyRotater _rotater;
-        private EnemyAttacker _attacker;
+        private MoveStrategy _moveStrategy;
+        private HostileStrategy _hostileStrategy;
         
-        private Transform _target;
-
         public EnemyHostileState(Enemy enemy, EnemyStateMachine stateMachine) : base(enemy, stateMachine)
         {
+        }
+
+        public void Initialize(EnemySearchState searchState, MoveStrategy moveStrategy, HostileStrategy hostileStrategy)
+        {
+            _searchState = searchState;
+            _moveStrategy = moveStrategy;
+            _hostileStrategy = hostileStrategy;
         }
         
         public void UpdateState()
         {
-            
+            _moveStrategy.HandleMovement();
+            _hostileStrategy.Execute();
         }
 
         public void SetTarget(Transform target)
         {
             if (target.TryGetComponent(out Player.Player player))
             {
-                _target = target;
+                _moveStrategy.SetTarget(target);
             }
-        }
-
-        public void Initialize(EnemySearchState searchState, EnemyMover mover, EnemyRotater rotater,
-            EnemyAttacker attacker)
-        {
-            _searchState = searchState;
-            _mover = mover;
-            _rotater = rotater;
-            _attacker = attacker;
-        }
-        
-        private void HandleMovement()
-        {
-            
-            
-            Attack();
-        }
-
-        private void Attack()
-        {
-            _attacker.Attack();
         }
     }
 }
