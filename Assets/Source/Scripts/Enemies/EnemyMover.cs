@@ -2,29 +2,34 @@ using UnityEngine;
 
 namespace Source.Scripts.Enemies
 {
-    public class EnemyMover : Mover
+    public class EnemyMover
     {
-        public EnemyMover(Transform transform, Rigidbody rigidbody)
+        private Transform _transform;
+        private Rigidbody _rigidbody;
+        private Transform _target;
+        private float _speed;
+        
+        public EnemyMover(Transform transform, Rigidbody rigidbody,  float speed)
         {
-            Rigidbody = rigidbody;
-            Transform = transform;
+            _rigidbody = rigidbody;
+            _transform = transform;
+            _speed = speed;
         }
 
-        public override void Move()
-        {
-            Vector3 direction = Target.position - Transform.position;
+        public Vector3 TargetPosition => _target.position;
 
-            Rigidbody.velocity = direction.normalized * Speed;
+        public void Move()
+        {
+            Vector3 distance = _target.position - _transform.position;
+            Vector3 direction = new Vector3(distance.x, 0, 0).normalized;
+
+            _rigidbody.velocity = direction * _speed;
+            _rigidbody.velocity += Physics.gravity;
         }
 
-        public override void SetSpeed(float speed)
+        public void SetTarget(Transform target)
         {
-            Speed = speed;
-        }
-
-        public override void SetTarget(Transform target)
-        {
-            Target = target;
+            _target = target;
         }
     }
 }

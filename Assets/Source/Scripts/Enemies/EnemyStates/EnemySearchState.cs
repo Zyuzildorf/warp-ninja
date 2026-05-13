@@ -5,39 +5,45 @@ namespace Source.Scripts.Enemies.EnemyStates
 {
     public class EnemySearchState : EnemyState, IUpdatable
     {
-        private EnemyHostileState  _hostileState;
-        
-        private TargetFinder _targetFinder;
+        private EnemyHostileState _hostileState;
+
+        private SearchStrategy _searchStrategy;
         private MoveStrategy _moveStrategy;
-        
+
         public EnemySearchState(Enemy enemy, EnemyStateMachine stateMachine) : base(enemy, stateMachine)
         {
         }
-        
-        public void Initialize(EnemyHostileState hostileState, TargetFinder targetFinder, 
-            MoveStrategy moveStrategy, HostileStrategy hostileStrategy)
+
+        public void Initialize(EnemyHostileState hostileState, SearchStrategy searchStrategy,
+            MoveStrategy moveStrategy)
         {
             _hostileState = hostileState;
-            _targetFinder = targetFinder;
-            
+            _searchStrategy = searchStrategy;
+
             _moveStrategy = moveStrategy;
+            
         }
-        
+
         public void UpdateState()
         {
-            FindTarget();
-            
+            _searchStrategy.CheckForTarget();
             _moveStrategy.HandleMovement();
         }
-        
 
-        private void FindTarget()
+        public override void Enter()
         {
-            if (_targetFinder.TryFindTarget(out Transform target))
-            {
-                _hostileState.SetTarget(target);
-                StateMachine.SetState(_hostileState);
-            }
+            _searchStrategy.OnTargetFound += HandleTarget;
+        }
+
+        public override void Exit()
+        {
+            _searchStrategy.OnTargetFound -= HandleTarget;
+        }
+
+        private void HandleTarget(Transform target)
+        {
+            _hostileState.SetTarget(target);
+            StateMachine.SetState(_hostileState);
         }
     }
 }

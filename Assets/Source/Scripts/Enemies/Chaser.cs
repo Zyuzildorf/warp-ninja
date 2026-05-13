@@ -6,7 +6,6 @@ namespace Source.Scripts.Enemies
     {
         private EnemyMover _mover;
         private EnemyRotater _rotater;
-        private Transform _target;
         
         private Transform _transform;
         private Rigidbody _rigidbody;
@@ -16,22 +15,19 @@ namespace Source.Scripts.Enemies
             _transform = transform;
             _rigidbody = GetComponent<Rigidbody>();
             
-            _mover = new EnemyMover(_transform, _rigidbody);
-            _rotater = new EnemyRotater(_transform);
-            
-            _mover.SetTarget(_target);
-            _mover.SetSpeed(Speed);
+            _mover = new EnemyMover(_transform, _rigidbody, MoveSpeed);
+            _rotater = new EnemyRotater(_transform, RotationSpeed);
         }
 
         public override void HandleMovement()
         {
             _mover.Move();
-            _rotater.Rotate(_target.position);
+            _rotater.Rotate(_mover.TargetPosition);
         }
 
         public override void SetTarget(Transform target)
         {
-            _target = target;
+            _mover.SetTarget(target);
         }
     }
 }

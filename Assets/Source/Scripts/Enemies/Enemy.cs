@@ -5,6 +5,7 @@ using UnityEngine;
 
 namespace Source.Scripts.Enemies
 {
+    [RequireComponent(typeof(TargetFinder))]
     public class Enemy : MonoBehaviour, IHealthObject
     {
         [SerializeField] private int _maxHealth;
@@ -17,17 +18,23 @@ namespace Source.Scripts.Enemies
         private EnemyHostileState  _hostileState;
         private EnemyStateMachine _stateMachine;
         
-        private ISearchPattern _searchPattern;
         private TargetFinder _targetFinder;
         
         private Health _health;
 
         private void Awake()
         {
+            _targetFinder = GetComponent<TargetFinder>();
             
+            Init();
         }
 
-        private void Update()
+        private void Start()
+        {
+            _stateMachine.SetState(_searchState);
+        }
+
+        private void FixedUpdate()
         {
             _stateMachine.UpdateCurrentState();
         }
@@ -39,7 +46,15 @@ namespace Source.Scripts.Enemies
 
         private void Init()
         {
+            _health = new Health(_maxHealth);
+
+            _stateMachine = new EnemyStateMachine();
             
+            _searchState = new EnemySearchState(this, _stateMachine);
+            _hostileState = new EnemyHostileState(this, _stateMachine);
+            
+            _searchState.Initialize(_hostileState,_targetFinder,_searchMoveStrategy);
+            _hostileState.Initialize(_searchState, _hostileMoveStrategy, _hostileStrategy);
         }
     }
 }

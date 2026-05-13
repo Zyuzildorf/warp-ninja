@@ -18,7 +18,7 @@ namespace Source.Scripts.Enemies.EnemyStates
         {
             _searchState = searchState;
             _moveStrategy = moveStrategy;
-            _hostileStrategy = hostileStrategy;
+            _hostileStrategy = hostileStrategy;//
         }
         
         public void UpdateState()

@@ -6,9 +6,6 @@ namespace Source.Scripts.Enemies
     {
         protected float Speed;
         
-        protected Rigidbody Rigidbody;
-        protected Transform Transform;
-        
         public Transform Target { get; protected set; }
         
         public abstract void Move();

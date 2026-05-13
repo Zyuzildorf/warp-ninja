@@ -4,53 +4,75 @@ using UnityEngine;
 
 namespace Source.Scripts.Enemies
 {
-    public class EnemyWaypointsMover : Mover
+    public class EnemyWaypointsMover
     {
         private readonly Collider _moveZone;
         private readonly float _safetyMargin;
         private readonly WaitForSeconds _waitBeforeMove;
-        
-        private bool _isOnWaypoint;
+        private float _speed;
 
-        public EnemyWaypointsMover(Transform transform, Rigidbody rigidbody, Collider moveZone, float safetyMargin,
+        private bool _isOnWaypoint;
+        private Transform _transform;
+        private Rigidbody _rigidbody;
+        private Coroutine _changeWaypointCoroutine;
+        
+        public EnemyWaypointsMover(Transform transform, Rigidbody rigidbody, float speed, Collider moveZone, float safetyMargin,
             float waitBeforeMove)
         {
-            Transform = transform;
-            Rigidbody = rigidbody;
+            _transform = transform;
+            _rigidbody = rigidbody;
+            _speed = speed;
 
             _moveZone = moveZone;
             _safetyMargin = safetyMargin;
             _waitBeforeMove = new WaitForSeconds(waitBeforeMove);
 
             _isOnWaypoint = false;
+
+            SetRandomWaypoint();
+        }
+        
+        public Vector3 CurrentWaypoint {get; private set;}
+
+        public void Move()
+        {
+            Debug.Log(_isOnWaypoint);
+            if (_isOnWaypoint)
+            {
+                _rigidbody.velocity = Vector3.zero;
+                return;
             }
 
-        public override void Move()
-        {
-            if (_isOnWaypoint) return;
+            Vector3 distance = CurrentWaypoint - _transform.position;
+            Vector3 horizontalDirection = new Vector3(distance.x, 0, 0).normalized;
+            
+            _rigidbody.velocity = horizontalDirection * _speed;
+            _rigidbody.velocity += Physics.gravity;
 
             if (CheckDestination())
             {
-                CoroutineHandler.Instance.StartCoroutine(ChangeWaypoint());
+                _isOnWaypoint = true;
+                _rigidbody.velocity = Vector3.zero;
+
+                if (_changeWaypointCoroutine != null)
+                {
+                    CoroutineHandler.Instance.StopCoroutine(_changeWaypointCoroutine);
+                }
+                
+                _changeWaypointCoroutine = CoroutineHandler.Instance.StartCoroutine(ChangeWaypoint());
             }
-
-            Vector3 direction = Target.position - Transform.position;
-            Rigidbody.velocity = direction.normalized * Speed;
         }
 
-        public override void SetSpeed(float speed)
+        public void SetTarget(Transform target)
         {
-            Speed = speed;
-        }
-
-        public override void SetTarget(Transform target)
-        {
-            Target = target;
+            CurrentWaypoint = target.position;
         }
 
         private bool CheckDestination()
         {
-            if (Transform.position.x - Target.position.x < _safetyMargin)
+            float distance = Vector3.Distance(_transform.position, CurrentWaypoint);
+            
+            if (distance <= _safetyMargin)
             {
                 _isOnWaypoint = true;
                 return true;
@@ -63,14 +85,17 @@ namespace Source.Scripts.Enemies
         private IEnumerator ChangeWaypoint()
         {
             yield return _waitBeforeMove;
+            
             SetRandomWaypoint();
-            CheckDestination();
+            _isOnWaypoint = false;
+            
+            _changeWaypointCoroutine = null;
         }
 
         private void SetRandomWaypoint()
         {
             float randomXPos = Random.Range(_moveZone.bounds.min.x, _moveZone.bounds.max.x);
-            Target.position = new Vector3(randomXPos, Transform.position.y, Transform.position.z);
+            CurrentWaypoint = new Vector3(randomXPos, _transform.position.y, _transform.position.z);
         }
     }
 }

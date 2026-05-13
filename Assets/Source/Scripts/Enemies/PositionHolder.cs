@@ -18,15 +18,15 @@ namespace Source.Scripts.Enemies
             _transform = transform;
             _rigidbody = GetComponent<Rigidbody>();
             
-            _mover = new EnemyMover(_transform, _rigidbody);
-            _rotater = new EnemyRotater(_transform);
+            _mover = new EnemyMover(_transform, _rigidbody, MoveSpeed);
+            _rotater = new EnemyRotater(_transform, RotationSpeed);
             
             _mover.SetTarget(_startPosition);
             }
 
         public override void HandleMovement()
         {
-            if (IsOnPostion()) return;
+            if (IsOnPosition()) return;
 
             _mover.Move();
             _rotater.Rotate(_startPosition.position);
@@ -37,9 +37,11 @@ namespace Source.Scripts.Enemies
             _mover.SetTarget(target);
         }
 
-        private bool IsOnPostion()
+        private bool IsOnPosition()
         {
-            if (transform.position.x - _startPosition.position.x <= _safetyMargin)
+            float distance = Vector3.Distance(_startPosition.position, _transform.position);
+            
+            if (distance <= _safetyMargin)
             {
                 return true;
             }

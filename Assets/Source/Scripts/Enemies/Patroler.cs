@@ -7,10 +7,10 @@ namespace Source.Scripts.Enemies
         [SerializeField] private Collider _moveZone;
         [SerializeField] private float _safetyMargin;
         [SerializeField] private float _waitBeforeMove;
-        
+
         private EnemyRotater _rotater;
         private EnemyWaypointsMover _mover;
-        
+
         private Rigidbody _rigidbody;
         private Transform _transform;
 
@@ -18,18 +18,20 @@ namespace Source.Scripts.Enemies
         {
             _transform = transform;
             _rigidbody = GetComponent<Rigidbody>();
-            
-            _rotater = new EnemyRotater(_transform);
-            _mover = new EnemyWaypointsMover(_transform, _rigidbody, _moveZone, _safetyMargin, _waitBeforeMove);
-            
-            _mover.SetSpeed(Speed);
-        }
 
+            _rotater = new EnemyRotater(_transform, RotationSpeed);
+            _mover = new EnemyWaypointsMover(_transform, _rigidbody, MoveSpeed, _moveZone, _safetyMargin,
+                _waitBeforeMove);
+        }
 
         public override void HandleMovement()
         {
-           _mover.Move();
-           _rotater.Rotate(_mover.Target.position);
+            _mover.Move();
+
+            if (_mover.CurrentWaypoint != Vector3.zero)
+            {
+                _rotater.Rotate(_mover.CurrentWaypoint);
+            }
         }
 
         public override void SetTarget(Transform target)
