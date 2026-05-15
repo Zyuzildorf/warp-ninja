@@ -34,8 +34,8 @@ namespace Source.Scripts.Enemies
             Vector3 forward = transform.forward * _distance;
 
             float halfAngle = _viewAngle / 2;
-            Quaternion leftRotation = Quaternion.Euler(0, -halfAngle, 0);
-            Quaternion rightRotation = Quaternion.Euler(0, halfAngle, 0);
+            Quaternion leftRotation = Quaternion.Euler(-halfAngle, 0, 0);
+            Quaternion rightRotation = Quaternion.Euler(halfAngle, 0, 0);
 
             Vector3 leftBoundary = leftRotation * forward;
             Vector3 rightBoundary = rightRotation * forward;

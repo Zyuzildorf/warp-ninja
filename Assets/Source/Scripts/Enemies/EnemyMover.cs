@@ -20,13 +20,17 @@ namespace Source.Scripts.Enemies
 
         public void Move()
         {
+            _rigidbody.velocity = CalculateDesiredVelocity();
+        }
+
+        public Vector3 CalculateDesiredVelocity()
+        {
             Vector3 distance = _target.position - _transform.position;
             Vector3 direction = new Vector3(distance.x, 0, 0).normalized;
 
-            _rigidbody.velocity = direction * _speed;
-            _rigidbody.velocity += Physics.gravity;
+            return direction * _speed +Physics.gravity;
         }
-
+        
         public void SetTarget(Transform target)
         {
             _target = target;
