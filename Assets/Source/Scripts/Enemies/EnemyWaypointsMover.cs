@@ -36,7 +36,6 @@ namespace Source.Scripts.Enemies
 
         public void Move()
         {
-            Debug.Log(_isOnWaypoint);
             if (_isOnWaypoint)
             {
                 _rigidbody.velocity = Vector3.zero;

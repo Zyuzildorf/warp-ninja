@@ -1,3 +1,4 @@
+using System;
 using Source.Scripts.Game;
 using Source.Scripts.Interfaces;
 using Source.Scripts.Other;
@@ -17,6 +18,7 @@ namespace Source.Scripts.Player
         private PlayerAimState _aimState;
         private PlayerThrowState _throwState;
         private PlayerTeleportState _teleportState;
+        private PlayerDieState _dieState;
         
         private PlayerPointer _pointer;
         private PlayerRotater _rotater;
@@ -50,6 +52,16 @@ namespace Source.Scripts.Player
             _stateMachine.SetState(_idleState);
         }
 
+        private void OnEnable()
+        {
+            _health.OnDeath += Die;
+        }
+
+        private void OnDisable()
+        {
+            _health.OnDeath -= Die;
+        }
+
         public void HandleDamage(int damage)
         {
             //Добавить валидацию
@@ -66,6 +78,7 @@ namespace Source.Scripts.Player
             _aimState = new PlayerAimState(this,  _stateMachine);
             _throwState = new PlayerThrowState(this,  _stateMachine);
             _teleportState = new PlayerTeleportState(this, _stateMachine);
+            _dieState = new PlayerDieState(this, _stateMachine);
             
             _idleState.Initialize(_aimState);
             _aimState.Initialize(_throwState, _pointer, _rotater);
@@ -76,5 +89,9 @@ namespace Source.Scripts.Player
             _teleporter.Initialize(_collider, _rigidbody);
         }
 
+        private void Die()
+        {
+            _stateMachine.SetState(_dieState);
+        }
     }
 }

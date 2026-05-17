@@ -1,4 +1,5 @@
 using System;
+using Source.Scripts.Interfaces;
 using UnityEngine;
 
 namespace Source.Scripts.Weapons
@@ -6,6 +7,7 @@ namespace Source.Scripts.Weapons
     [RequireComponent(typeof(Rigidbody))]
     public class Kunai : Weapon
     {
+        [SerializeField] private Collider _collider;
         [SerializeField] private LayerMask _bounceLayerMask;
         [SerializeField] private float _zPosition = 0f;
         [SerializeField] private float _bounceEnergyLoss = 0.6f;
@@ -17,7 +19,7 @@ namespace Source.Scripts.Weapons
         private Vector3 _velocityBeforeCollision;
         private float _affectedRotationSpeed;
         private bool _isThrown;
-
+        
         private void Awake()
         {
             _rigidbody = GetComponent<Rigidbody>();
@@ -40,16 +42,8 @@ namespace Source.Scripts.Weapons
 
         private void OnCollisionEnter(Collision other)
         {
-            if (other.gameObject.layer == _bounceLayerMask)
-            {
-                Vector3 normal = other.contacts[0].normal;
-                normal.z = 0;
-                normal.Normalize();
-
-                BounceOff(normal);
-
-                _isThrown = false;
-            }
+            HandleBounce(other);
+            HandleHit(other);
         }
 
         public override void SetVelocity(Vector3 velocity)
@@ -80,6 +74,34 @@ namespace Source.Scripts.Weapons
             gameObject.SetActive(false);
         }
 
+        private void HandleBounce(Collision collision)
+        {
+            if (collision.gameObject.layer == _bounceLayerMask)
+            {
+                Vector3 normal = collision.contacts[0].normal;
+                normal.z = 0;
+                normal.Normalize();
+
+                BounceOff(normal);
+
+                _isThrown = false;
+            }
+        }
+
+
+        private void HandleHit(Collision collision)
+        {
+            if (collision.gameObject.TryGetComponent(out Player.Player player))
+            {
+                return;
+            }
+            
+            if (collision.gameObject.TryGetComponent(out IHealthObject healthObject))
+            {
+                InvokeOnHitHealthObject(healthObject);
+            }
+        }
+        
         private Vector3 CalculateRotationSpeed(float yComponent)
         {
             float speed = Mathf.Lerp(_minRotationSpeed, _maxRotationSpeed, yComponent);

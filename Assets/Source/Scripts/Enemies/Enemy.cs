@@ -1,3 +1,4 @@
+using System;
 using Source.Scripts.Enemies.EnemyStates;
 using Source.Scripts.Enemies.HostileStrategies;
 using Source.Scripts.Enemies.MoveStrategies;
@@ -11,16 +12,17 @@ namespace Source.Scripts.Enemies
     {
         [SerializeField] private int _maxHealth;
         [SerializeField] private float _searchCooldown;
-        
+
         [SerializeField] private MoveStrategy _searchMoveStrategy;
         [SerializeField] private MoveStrategy _hostileMoveStrategy;
         [SerializeField] private HostileStrategy _hostileStrategy;
         [SerializeField] private SearchStrategy _searchStrategy;
-        
+
         private EnemySearchState _searchState;
-        private EnemyHostileState  _hostileState;
+        private EnemyHostileState _hostileState;
+        private EnemyDieState _dieState;
         private EnemyStateMachine _stateMachine;
-        
+
         private Health _health;
 
         private void Awake()
@@ -38,6 +40,16 @@ namespace Source.Scripts.Enemies
             _stateMachine.UpdateCurrentState();
         }
 
+        private void OnEnable()
+        {
+            _health.OnDeath += Die;
+        }
+
+        private void OnDisable()
+        {
+            _health.OnDeath -= Die;
+        }
+
         public virtual void HandleDamage(int damage)
         {
             _health.TakeDamage(damage);
@@ -48,12 +60,21 @@ namespace Source.Scripts.Enemies
             _health = new Health(_maxHealth);
 
             _stateMachine = new EnemyStateMachine();
-            
+
             _searchState = new EnemySearchState(this, _stateMachine);
             _hostileState = new EnemyHostileState(this, _stateMachine, _searchCooldown);
-            
+            _dieState = new EnemyDieState(this, _stateMachine);
+
             _searchState.Initialize(_hostileState, _searchStrategy, _searchMoveStrategy);
             _hostileState.Initialize(_searchState, _hostileMoveStrategy, _hostileStrategy, _searchStrategy);
+        }
+
+        private void Die()
+        {
+            _stateMachine.SetState(_dieState);
+            
+            Rigidbody rb = GetComponent<Rigidbody>();
+            rb.constraints = RigidbodyConstraints.None;
         }
     }
 }

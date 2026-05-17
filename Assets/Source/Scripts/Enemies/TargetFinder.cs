@@ -28,21 +28,26 @@ namespace Source.Scripts.Enemies
             }
         }
 
-        public void OnDrawGizmos()
+        private void OnDrawGizmos()
         {
+            float halfAngle = _viewAngle * 0.5f;
+            Vector3 forward = transform.forward;
+
+            Gizmos.color = Color.green;
+            Gizmos.DrawLine(transform.position, transform.position + forward * _distance);
+
             Gizmos.color = Color.yellow;
-            Vector3 forward = transform.forward * _distance;
 
-            float halfAngle = _viewAngle / 2;
-            Quaternion leftRotation = Quaternion.Euler(-halfAngle, 0, 0);
-            Quaternion rightRotation = Quaternion.Euler(halfAngle, 0, 0);
+            Vector3 leftBorder = Quaternion.Euler(0, -halfAngle, 0) * forward;
+            Gizmos.DrawLine(transform.position, transform.position + leftBorder * _distance);
 
-            Vector3 leftBoundary = leftRotation * forward;
-            Vector3 rightBoundary = rightRotation * forward;
+            Vector3 rightBorder = Quaternion.Euler(0, halfAngle, 0) * forward;
+            Gizmos.DrawLine(transform.position, transform.position + rightBorder * _distance);
 
-            Gizmos.DrawLine(transform.position, transform.position + leftBoundary);
-            Gizmos.DrawLine(transform.position, transform.position + rightBoundary);
-            Gizmos.DrawWireSphere(transform.position + forward, _distance * 0.1f);
+            Vector3 topBorder = Quaternion.Euler(halfAngle, 0, 0) * forward;
+            Vector3 bottomBorder = Quaternion.Euler(-halfAngle, 0, 0) * forward;
+            Gizmos.DrawLine(transform.position, transform.position + topBorder * _distance);
+            Gizmos.DrawLine(transform.position, transform.position + bottomBorder * _distance);
         }
     }
 }
