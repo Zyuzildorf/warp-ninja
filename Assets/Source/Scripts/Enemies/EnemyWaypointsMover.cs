@@ -9,7 +9,7 @@ namespace Source.Scripts.Enemies
         private readonly Collider _moveZone;
         private readonly float _safetyMargin;
         private readonly WaitForSeconds _waitBeforeMove;
-        private float _speed;
+        private readonly float _speed;
 
         private bool _isOnWaypoint;
         private Transform _transform;
@@ -64,6 +64,8 @@ namespace Source.Scripts.Enemies
 
         public void SetTarget(Transform target)
         {
+            CheckerForNull.ThrowIfNullArgument(target);
+            
             CurrentWaypoint = target.position;
         }
 

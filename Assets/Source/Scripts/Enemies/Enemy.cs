@@ -1,4 +1,3 @@
-using System;
 using Source.Scripts.Enemies.EnemyStates;
 using Source.Scripts.Enemies.HostileStrategies;
 using Source.Scripts.Enemies.MoveStrategies;
@@ -10,9 +9,13 @@ namespace Source.Scripts.Enemies
 {
     public class Enemy : MonoBehaviour, IHealthObject
     {
+        [Header("Health")]
         [SerializeField] private int _maxHealth;
+    
+        [Header("Search Settings")]
         [SerializeField] private float _searchCooldown;
 
+        [Header("Strategies")]
         [SerializeField] private MoveStrategy _searchMoveStrategy;
         [SerializeField] private MoveStrategy _hostileMoveStrategy;
         [SerializeField] private HostileStrategy _hostileStrategy;
@@ -52,7 +55,10 @@ namespace Source.Scripts.Enemies
 
         public virtual void HandleDamage(int damage)
         {
-            _health.TakeDamage(damage);
+            if (damage >= 0)
+            {
+                _health.TakeDamage(damage);
+            }
         }
 
         private void Init()
@@ -72,7 +78,7 @@ namespace Source.Scripts.Enemies
         private void Die()
         {
             _stateMachine.SetState(_dieState);
-            
+
             Rigidbody rb = GetComponent<Rigidbody>();
             rb.constraints = RigidbodyConstraints.None;
         }

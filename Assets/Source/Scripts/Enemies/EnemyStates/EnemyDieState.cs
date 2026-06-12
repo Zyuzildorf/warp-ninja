@@ -1,5 +1,3 @@
-using UnityEngine;
-
 namespace Source.Scripts.Enemies.EnemyStates
 {
     public class EnemyDieState : EnemyState
@@ -10,7 +8,6 @@ namespace Source.Scripts.Enemies.EnemyStates
 
         public override void Enter()
         {
-            Debug.Log("Enemy killed");
         }
     }
 }

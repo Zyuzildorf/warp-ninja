@@ -5,6 +5,7 @@ namespace Source.Scripts.Enemies
 {
     public class TargetFinder : SearchStrategy
     {
+        [Header("Detection Settings")]
         [SerializeField] private LayerMask _targetLayer;
         [SerializeField] private float _viewAngle;
         [SerializeField] private float _distance;

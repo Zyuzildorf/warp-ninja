@@ -27,6 +27,11 @@ namespace Source.Scripts.Enemies.EnemyStates
         public void Initialize(EnemySearchState searchState, MoveStrategy moveStrategy, HostileStrategy hostileStrategy,
             SearchStrategy searchStrategy)
         {
+            CheckerForNull.ThrowIfNullArgument(searchState);
+            CheckerForNull.ThrowIfNullArgument(moveStrategy);
+            CheckerForNull.ThrowIfNullArgument(hostileStrategy);
+            CheckerForNull.ThrowIfNullArgument(searchStrategy);
+            
             _searchState = searchState;
             _moveStrategy = moveStrategy;
             _hostileStrategy = hostileStrategy;
@@ -49,10 +54,13 @@ namespace Source.Scripts.Enemies.EnemyStates
         public override void Exit()
         {
             _searchStrategy.OnTargetFound -= OnPlayerDetected;
+            _hostileStrategy.Exit();
         }
 
         public void SetTarget(Transform target)
         {
+            CheckerForNull.ThrowIfNullArgument(target);
+            
             if (target.TryGetComponent(out Player.Player player))
             {
                 _moveStrategy.SetTarget(target);

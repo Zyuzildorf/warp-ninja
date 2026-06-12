@@ -1,3 +1,4 @@
+using Source.Scripts.Utillities;
 using UnityEngine;
 
 namespace Source.Scripts.Enemies
@@ -11,6 +12,9 @@ namespace Source.Scripts.Enemies
         
         public EnemyMover(Transform transform, Rigidbody rigidbody,  float speed)
         {
+            CheckerForNull.ThrowIfNullArgument(transform);
+            CheckerForNull.ThrowIfNullArgument(rigidbody);
+            
             _rigidbody = rigidbody;
             _transform = transform;
             _speed = speed;
@@ -33,6 +37,8 @@ namespace Source.Scripts.Enemies
         
         public void SetTarget(Transform target)
         {
+            CheckerForNull.ThrowIfNullArgument(target);
+            
             _target = target;
         }
     }

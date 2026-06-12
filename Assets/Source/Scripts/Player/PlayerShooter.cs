@@ -1,5 +1,5 @@
-using System;
 using Source.Scripts.Interfaces;
+using Source.Scripts.Utillities;
 using Source.Scripts.Weapons;
 using UnityEngine;
 
@@ -26,6 +26,8 @@ namespace Source.Scripts.Player
 
         public void Initialize(Rigidbody rigidbody)
         {
+            CheckerForNull.ThrowIfNullArgument(rigidbody);
+            
             _rigidbody = rigidbody;
         }
 

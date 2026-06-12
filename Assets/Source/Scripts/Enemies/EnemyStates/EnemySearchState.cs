@@ -1,5 +1,6 @@
 using Source.Scripts.Enemies.MoveStrategies;
 using Source.Scripts.Interfaces;
+using Source.Scripts.Utillities;
 using UnityEngine;
 
 namespace Source.Scripts.Enemies.EnemyStates
@@ -18,6 +19,10 @@ namespace Source.Scripts.Enemies.EnemyStates
         public void Initialize(EnemyHostileState hostileState, SearchStrategy searchStrategy,
             MoveStrategy moveStrategy)
         {
+            CheckerForNull.ThrowIfNullArgument(hostileState);
+            CheckerForNull.ThrowIfNullArgument(searchStrategy);
+            CheckerForNull.ThrowIfNullArgument(moveStrategy);
+            
             _hostileState = hostileState;
             _searchStrategy = searchStrategy;
 
@@ -43,6 +48,8 @@ namespace Source.Scripts.Enemies.EnemyStates
 
         private void HandleTarget(Transform target)
         {
+            CheckerForNull.ThrowIfNullArgument(target);
+            
             _hostileState.SetTarget(target);
             StateMachine.SetState(_hostileState);
         }

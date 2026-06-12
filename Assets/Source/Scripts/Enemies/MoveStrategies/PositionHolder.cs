@@ -1,11 +1,14 @@
+using Source.Scripts.Utillities;
 using UnityEngine;
 
 namespace Source.Scripts.Enemies.MoveStrategies
 {
     public class PositionHolder : MoveStrategy
     {
-        [SerializeField] private Transform _startPosition;
         [SerializeField] private float _safetyMargin = 0.5f;
+        
+        [Header("Position Settings")]
+        [SerializeField] private Transform _startPosition;
         [SerializeField] private bool _isRightLooking;
         
         private EnemyMover _mover;
@@ -21,7 +24,6 @@ namespace Source.Scripts.Enemies.MoveStrategies
             
             _mover = new EnemyMover(_transform, _rigidbody, MoveSpeed);
             _rotater = new EnemyRotater(_transform, RotationSpeed);
-            _isRightLooking = false;
             
             _mover.SetTarget(_startPosition);
             }
@@ -40,6 +42,8 @@ namespace Source.Scripts.Enemies.MoveStrategies
 
         public override void SetTarget(Transform target)
         {
+            CheckerForNull.ThrowIfNullArgument(target);
+            
             _mover.SetTarget(target);
         }
 

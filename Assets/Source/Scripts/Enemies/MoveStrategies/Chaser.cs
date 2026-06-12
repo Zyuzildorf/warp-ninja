@@ -5,7 +5,10 @@ namespace Source.Scripts.Enemies.MoveStrategies
 {
     public class Chaser : MoveStrategy
     {
+        [Header("Chase Zone")]
         [SerializeField] private Collider _threatZone;
+        
+        [Header("Chase Settings")]
         [SerializeField] private float _closeDistance;
 
         private EnemyMover _mover;
@@ -46,6 +49,8 @@ namespace Source.Scripts.Enemies.MoveStrategies
 
         public override void SetTarget(Transform target)
         {
+            CheckerForNull.ThrowIfNullArgument(target);
+            
             _mover.SetTarget(target);
         }
 

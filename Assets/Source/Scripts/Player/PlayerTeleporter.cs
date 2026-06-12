@@ -24,6 +24,9 @@ namespace Source.Scripts.Player
 
         public void Initialize(Collider collider, Rigidbody rigidbody)
         {
+            CheckerForNull.ThrowIfNullArgument(collider);
+            CheckerForNull.ThrowIfNullArgument(rigidbody);
+            
             _collider = collider;
             _rigidbody = rigidbody;
         }

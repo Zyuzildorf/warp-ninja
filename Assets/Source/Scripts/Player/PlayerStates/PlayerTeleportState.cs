@@ -1,4 +1,4 @@
-using UnityEngine;
+using Source.Scripts.Utillities;
 
 namespace Source.Scripts.Player.PlayerStates
 {
@@ -20,6 +20,9 @@ namespace Source.Scripts.Player.PlayerStates
 
         public void Initialize(PlayerAimState aimState, PlayerTeleporter teleporter)
         {
+            CheckerForNull.ThrowIfNullArgument(aimState);
+            CheckerForNull.ThrowIfNullArgument(teleporter);
+            
             _aimState = aimState;
             _teleporter = teleporter;
         }

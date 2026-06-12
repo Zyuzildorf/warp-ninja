@@ -4,7 +4,10 @@ namespace Source.Scripts.Enemies.MoveStrategies
 {
     public class Patroler : MoveStrategy
     {
+        [Header("Patrol Zone")]
         [SerializeField] private Collider _moveZone;
+        
+        [Header("Patrol Settings")]
         [SerializeField] private float _safetyMargin;
         [SerializeField] private float _waitBeforeMove;
 

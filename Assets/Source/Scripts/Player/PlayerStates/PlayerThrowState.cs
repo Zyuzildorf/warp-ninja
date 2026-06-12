@@ -1,3 +1,4 @@
+using Source.Scripts.Utillities;
 using UnityEngine;
 
 namespace Source.Scripts.Player.PlayerStates
@@ -33,6 +34,11 @@ namespace Source.Scripts.Player.PlayerStates
         public void Initialize(PlayerAimState aimState, PlayerTeleportState teleportState, 
             PlayerEnergy energy, PlayerShooter shooter)
         {
+            CheckerForNull.ThrowIfNullArgument(aimState);
+            CheckerForNull.ThrowIfNullArgument(teleportState);
+            CheckerForNull.ThrowIfNullArgument(energy);
+            CheckerForNull.ThrowIfNullArgument(shooter);
+            
             _aimState = aimState;
             _teleportState = teleportState;
             

@@ -6,5 +6,6 @@ namespace Source.Scripts.Enemies.HostileStrategies
     {
         public abstract void Execute();
         public abstract void SetTarget(Transform target);
+        public abstract void Exit();
     }
 }

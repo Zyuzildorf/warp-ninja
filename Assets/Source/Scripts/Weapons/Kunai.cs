@@ -1,4 +1,3 @@
-using System;
 using Source.Scripts.Interfaces;
 using UnityEngine;
 
@@ -7,12 +6,21 @@ namespace Source.Scripts.Weapons
     [RequireComponent(typeof(Rigidbody))]
     public class Kunai : Weapon
     {
+        [Header("Collision")]
         [SerializeField] private Collider _collider;
+    
+        [Header("Bounce Settings")]
         [SerializeField] private LayerMask _bounceLayerMask;
-        [SerializeField] private float _zPosition = 0f;
         [SerializeField] private float _bounceEnergyLoss = 0.6f;
+    
+        [Header("Position")]
+        [SerializeField] private float _zPosition = 0f;
+    
+        [Header("Rotation")]
         [SerializeField] private float _minRotationSpeed = 1f;
         [SerializeField] private float _maxRotationSpeed = 25f;
+    
+        [Header("Gravity")]
         [SerializeField] private float _gravityScale = 1f;
 
         private Rigidbody _rigidbody;

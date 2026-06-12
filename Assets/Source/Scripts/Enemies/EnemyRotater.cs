@@ -1,3 +1,4 @@
+using Source.Scripts.Utillities;
 using UnityEngine;
 
 namespace Source.Scripts.Enemies
@@ -9,12 +10,16 @@ namespace Source.Scripts.Enemies
 
         public EnemyRotater(Transform transform, float speed)
         {
+            CheckerForNull.ThrowIfNullArgument(transform);
+            
             _transform = transform;
             _speed = speed;
         }
         
         public void Rotate(Vector3 target)
         {
+            CheckerForNull.ThrowIfNullArgument(target);
+            
             Vector3 distance = target - _transform.position;
             Vector3 horizontalDirection = new Vector3(distance.x, 0, 0);
 

@@ -1,3 +1,4 @@
+using Source.Scripts.Utillities;
 using UnityEngine;
 
 namespace Source.Scripts.Player.PlayerStates
@@ -24,6 +25,8 @@ namespace Source.Scripts.Player.PlayerStates
 
         public void Initialize(PlayerAimState aimState)
         {
+            CheckerForNull.ThrowIfNullArgument(aimState);
+            
             _aimState = aimState;
         }
         

@@ -876,13 +876,13 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 963194225}
   serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -10.18, y: 5.03, z: -13.87}
+  m_LocalRotation: {x: 0, y: 1, z: 0, w: 0}
+  m_LocalPosition: {x: -10.18, y: 5.03, z: 23.4}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 180, z: 0}
 --- !u!45 &963194229
 Skybox:
   m_ObjectHideFlags: 0
@@ -1316,7 +1316,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3767d32e07e34d80ae14d45d91649dc9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _attackDelay: 0.2
+  _burstInterval: 0.2
+  _burstCooldown: 1.5
+  _burstSize: 3
+  _damage: 1
+  _projectileSpeed: 20
+  _projectileLifeTime: 2
 --- !u!114 &1365529782
 MonoBehaviour:
   m_ObjectHideFlags: 0

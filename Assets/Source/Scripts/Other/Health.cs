@@ -4,14 +4,13 @@ namespace Source.Scripts.Other
 {
     public class Health
     {
-        private int _maxHealth;
         private int _currentHealth;
         
         public event Action OnDeath;
 
         public Health(int maxHealth)
         {
-            _maxHealth = maxHealth;
+            _currentHealth = maxHealth;
         }
 
         public void TakeDamage(int damage)

@@ -1,3 +1,4 @@
+using Source.Scripts.Utillities;
 using UnityEngine;
 
 namespace Source.Scripts.Player.PlayerStates
@@ -38,6 +39,10 @@ namespace Source.Scripts.Player.PlayerStates
 
         public void Initialize(PlayerThrowState throwState, PlayerPointer pointer, PlayerRotater rotater)
         {
+            CheckerForNull.ThrowIfNullArgument(throwState);
+            CheckerForNull.ThrowIfNullArgument(pointer);
+            CheckerForNull.ThrowIfNullArgument(rotater);
+            
             _playerThrowState = throwState;
             _pointer = pointer;
             _rotater = rotater;
