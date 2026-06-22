@@ -47,6 +47,18 @@ namespace Source.Scripts.Enemies.MoveStrategies
             _mover.SetTarget(target);
         }
 
+        public void SetDirection(bool isRight)
+        {
+            if (isRight)
+            {
+                _isRightLooking = true;
+            }
+            else
+            {
+                _isRightLooking = false;
+            }
+        }
+        
         private bool IsOnPosition()
         {
             float distance = Vector3.Distance(_startPosition.position, _transform.position);
