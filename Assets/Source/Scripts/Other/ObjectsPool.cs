@@ -18,7 +18,7 @@ namespace Source.Scripts.Other
             _pool = new ObjectPool<T>(
                 createFunc: () => CreateObject(),
                 actionOnGet: (obj) => OnGet(obj),
-                actionOnRelease: (obj) => obj.gameObject.SetActive(false),
+                actionOnRelease: (obj) => OnRelease(obj),
                 actionOnDestroy: (obj) => Destroy(obj.gameObject),
                 collectionCheck: true,
                 defaultCapacity: _poolCapacity,
@@ -43,9 +43,9 @@ namespace Source.Scripts.Other
             return obj;
         }
 
-        protected virtual void GetObject()
+        protected virtual T GetObject()
         {
-            _pool.Get();
+            return _pool.Get();
         }
 
         protected virtual void ReleaseObject(T obj)
@@ -56,6 +56,11 @@ namespace Source.Scripts.Other
         protected virtual void OnGet(T obj)
         {
             obj.gameObject.SetActive(true);
+        }
+
+        protected virtual void OnRelease(T obj)
+        {
+            obj.gameObject.SetActive(false);
         }
     }
 }

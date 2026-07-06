@@ -5,14 +5,20 @@ namespace Source.Scripts.Enemies
     [System.Serializable]
     public class EnemySpawnData
     {
-        [Header("Prefab")] 
+        [Header("Prefab & Position")]
         public GameObject enemyPrefab;
-
-        [Header("Position")] 
         public Vector3 position;
 
-        [Header("Look Direction Override")] 
-        public bool overrideLookDirection;
-        public bool isRightLooking;
+        [Header("Strategy Overrides")]
+        public bool overrideMovementZone;
+        public Collider movementZone;
+
+        public bool overrideThreatZone;
+        public Collider threatZone;
+
+        public bool overrideStartPosition;
+        public Vector3 startPosition;
+        
+        public bool isRightLooking = false;
     }
 }

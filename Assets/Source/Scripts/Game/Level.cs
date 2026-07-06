@@ -1,41 +1,67 @@
+using System;
 using System.Collections.Generic;
 using Source.Scripts.Enemies;
-using Source.Scripts.Enemies.MoveStrategies;
 using UnityEngine;
 
-
-namespace Source.Scripts.Game
+public class Level : MonoBehaviour
 {
-    public class Level : MonoBehaviour
+    [Header("Dependencies")] [SerializeField]
+    private EnemyConfigurator _configurator;
+
+    [Header("Enemy Spawns")] [SerializeField]
+    private List<EnemySpawnData> _enemySpawns;
+
+    private List<Enemy> _activeEnemies = new List<Enemy>();
+    private int _aliveEnemyCount;
+
+    public event Action OnAllEnemiesDefeated;
+
+    private void Awake()
     {
-        [Header("Enemy Spawns")] 
-        [SerializeField] private List<EnemySpawnData> enemySpawns;
+        SpawnAllEnemies();
+    }
 
-        private void Start()
+    private void SpawnAllEnemies()
+    {
+        foreach (var spawn in _enemySpawns)
         {
-            SpawnAllEnemies();
-        }
+            GameObject obj = Instantiate(spawn.enemyPrefab, spawn.position, Quaternion.identity);
+            Enemy enemy = obj.GetComponent<Enemy>();
 
-        private void SpawnAllEnemies()
-        {
-            foreach (var spawn in enemySpawns)
+            if (enemy != null)
             {
-                GameObject enemy = Instantiate(spawn.enemyPrefab, spawn.position, Quaternion.identity);
-                ApplyOverrides(spawn.enemyPrefab,spawn);
+                _configurator.Configure(enemy, spawn);
+
+                _activeEnemies.Add(enemy);
+                _aliveEnemyCount++;
+                enemy.OnDie += OnEnemyDied;
             }
         }
+    }
 
-        private void ApplyOverrides(GameObject enemy, EnemySpawnData spawn)
+    private void OnEnemyDied(Enemy enemy)
+    {
+        _aliveEnemyCount--;
+        if (_aliveEnemyCount <= 0)
         {
-            if (spawn.overrideLookDirection)
-            {
-                var moveStrategy = enemy.GetComponent<MoveStrategy>();
-
-                if (moveStrategy.TryGetComponent(out PositionHolder holder))
-                {
-                    holder.SetDirection(spawn.isRightLooking);
-                }
-            }
+            OnAllEnemiesDefeated?.Invoke();
         }
+    }
+
+    private void CleanUp()
+    {
+        foreach (var enemy in _activeEnemies)
+        {
+            if (enemy != null)
+                enemy.OnDie -= OnEnemyDied;
+        }
+
+        _activeEnemies.Clear();
+        _aliveEnemyCount = 0;
+    }
+
+    private void OnDestroy()
+    {
+        CleanUp();
     }
 }

@@ -1,3 +1,4 @@
+using System;
 using Source.Scripts.Enemies.EnemyStates;
 using Source.Scripts.Enemies.HostileStrategies;
 using Source.Scripts.Enemies.MoveStrategies;
@@ -27,10 +28,20 @@ namespace Source.Scripts.Enemies
         private EnemyStateMachine _stateMachine;
 
         private Health _health;
+        public event Action<Enemy> OnDie;
 
         private void Awake()
         {
-            Init();
+            _health = new Health(_maxHealth);
+
+            _stateMachine = new EnemyStateMachine();
+
+            _searchState = new EnemySearchState(this, _stateMachine);
+            _hostileState = new EnemyHostileState(this, _stateMachine, _searchCooldown);
+            _dieState = new EnemyDieState(this, _stateMachine);
+
+            _searchState.Initialize(_hostileState, _searchStrategy, _searchMoveStrategy);
+            _hostileState.Initialize(_searchState, _hostileMoveStrategy, _hostileStrategy, _searchStrategy);
         }
 
         private void Start()
@@ -59,20 +70,6 @@ namespace Source.Scripts.Enemies
             {
                 _health.TakeDamage(damage);
             }
-        }
-
-        private void Init()
-        {
-            _health = new Health(_maxHealth);
-
-            _stateMachine = new EnemyStateMachine();
-
-            _searchState = new EnemySearchState(this, _stateMachine);
-            _hostileState = new EnemyHostileState(this, _stateMachine, _searchCooldown);
-            _dieState = new EnemyDieState(this, _stateMachine);
-
-            _searchState.Initialize(_hostileState, _searchStrategy, _searchMoveStrategy);
-            _hostileState.Initialize(_searchState, _hostileMoveStrategy, _hostileStrategy, _searchStrategy);
         }
 
         private void Die()

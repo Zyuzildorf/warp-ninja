@@ -40,9 +40,10 @@ namespace Source.Scripts.Other
             obj.StartLifeTimeDecreasing();
         }
 
-        protected override void ReleaseObject(Projectile obj)
+        protected override void OnRelease(Projectile obj)
         {
             obj.PrefferToDestroyed -= ReleaseObject;
+            obj.OnHitHealthObject -= OnHitHealthObject;
 
             base.ReleaseObject(obj);
         }

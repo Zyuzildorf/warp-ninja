@@ -6,30 +6,27 @@ namespace Source.Scripts.Enemies
 {
     public class EnemyWaypointsMover
     {
-        private readonly Collider _moveZone;
         private readonly float _safetyMargin;
         private readonly WaitForSeconds _waitBeforeMove;
         private readonly float _speed;
 
         private bool _isOnWaypoint;
+        private Collider _moveZone;
         private Transform _transform;
         private Rigidbody _rigidbody;
         private Coroutine _changeWaypointCoroutine;
         
-        public EnemyWaypointsMover(Transform transform, Rigidbody rigidbody, float speed, Collider moveZone, float safetyMargin,
+        public EnemyWaypointsMover(Transform transform, Rigidbody rigidbody, float speed, float safetyMargin,
             float waitBeforeMove)
         {
             _transform = transform;
             _rigidbody = rigidbody;
             _speed = speed;
 
-            _moveZone = moveZone;
             _safetyMargin = safetyMargin;
             _waitBeforeMove = new WaitForSeconds(waitBeforeMove);
 
             _isOnWaypoint = false;
-
-            SetRandomWaypoint();
         }
         
         public Vector3 CurrentWaypoint {get; private set;}
@@ -41,7 +38,9 @@ namespace Source.Scripts.Enemies
                 _rigidbody.velocity = Vector3.zero;
                 return;
             }
-
+            
+            if(_moveZone == null) return;
+            
             Vector3 distance = CurrentWaypoint - _transform.position;
             Vector3 horizontalDirection = new Vector3(distance.x, 0, 0).normalized;
             
@@ -67,6 +66,12 @@ namespace Source.Scripts.Enemies
             CheckerForNull.ThrowIfNullArgument(target);
             
             CurrentWaypoint = target.position;
+        }
+        
+        public void SetMoveZone(Collider moveZone)
+        {
+            _moveZone = moveZone;
+            SetRandomWaypoint();
         }
 
         private bool CheckDestination()
@@ -95,6 +100,12 @@ namespace Source.Scripts.Enemies
 
         private void SetRandomWaypoint()
         {
+            if (_moveZone == null)
+            {
+                CurrentWaypoint = _transform.position;
+                return;
+            }
+            
             float randomXPos = Random.Range(_moveZone.bounds.min.x, _moveZone.bounds.max.x);
             CurrentWaypoint = new Vector3(randomXPos, _transform.position.y, _transform.position.z);
         }

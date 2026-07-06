@@ -154,8 +154,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   <MoveSpeed>k__BackingField: 5
   <RotationSpeed>k__BackingField: 180
-  _startPosition: {fileID: 0}
   _safetyMargin: 0.5
+  _startPosition: {fileID: 0}
   _isRightLooking: 1
 --- !u!114 &8803228896670185951
 MonoBehaviour:
@@ -203,7 +203,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _attackDelay: 3
-  _distance: 1
+  _attackDuration: 0.3
+  _distance: 2
   _damage: 1
 --- !u!136 &6808238362913639737
 CapsuleCollider:

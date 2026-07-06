@@ -5,15 +5,13 @@ namespace Source.Scripts.Enemies.MoveStrategies
 {
     public class Chaser : MoveStrategy
     {
-        [Header("Chase Zone")]
-        [SerializeField] private Collider _threatZone;
-        
         [Header("Chase Settings")]
         [SerializeField] private float _closeDistance;
 
         private EnemyMover _mover;
         private EnemyRotater _rotater;
 
+        private Collider _threatZone;
         private Transform _transform;
         private Rigidbody _rigidbody;
 
@@ -26,8 +24,20 @@ namespace Source.Scripts.Enemies.MoveStrategies
             _rotater = new EnemyRotater(_transform, RotationSpeed);
         }
 
+        public void SetThreatZone(Collider movementZone)
+        {
+            _threatZone  = movementZone;
+            
+            if(_threatZone != null) Debug.Log("Threat Zone set");
+        }
+        
         public override void HandleMovement()
         {
+            if (_mover == null || _rotater == null || _threatZone == null)
+            {
+                return;
+            }
+            
             Vector3 desiredVelocity = _mover.CalculateDesiredVelocity();
             Vector3 futurePosition = _transform.position + desiredVelocity * Time.fixedDeltaTime;
 
@@ -61,5 +71,6 @@ namespace Source.Scripts.Enemies.MoveStrategies
 
             return true;
         }
+
     }
 }
