@@ -3,20 +3,21 @@ using UnityEngine;
 
 namespace Source.Scripts.Game.GameStates
 {
-    public class GameLoseState : GameState
+    public class PlayingState : GameState
     {
-        public GameLoseState(GameLogic gameLogic, GameStateMachine stateMachine) : base(gameLogic, stateMachine)
+        //Игровой процесс, пауза, 
+        
+        public PlayingState(Main main, GameStateMachine stateMachine) : base(main, stateMachine)
         {
         }
 
         public override void Enter()
         {
-            Time.timeScale = 0f;
+            Time.timeScale = 1f;
         }
 
         public override void Exit()
         {
-            base.Exit();
             
         }
     }

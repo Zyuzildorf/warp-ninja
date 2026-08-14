@@ -5,15 +5,15 @@ namespace Source.Scripts.Game
 {
     public class GameState : State
     {
-        public GameLogic GameLogic { get; private set; }
+        public Main Main { get; private set; }
         public GameStateMachine StateMachine { get; private set; }
 
-        public GameState(GameLogic gameLogic, GameStateMachine stateMachine)
+        public GameState(Main main, GameStateMachine stateMachine)
         {
-            CheckerForNull.ThrowIfNullArgument(gameLogic);
+            CheckerForNull.ThrowIfNullArgument(main);
             CheckerForNull.ThrowIfNullArgument(stateMachine);
             
-            GameLogic = gameLogic;
+            Main = main;
             StateMachine = stateMachine;
         }
     }

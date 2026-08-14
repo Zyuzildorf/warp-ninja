@@ -45,7 +45,7 @@ namespace Source.Scripts.Other
             obj.PrefferToDestroyed -= ReleaseObject;
             obj.OnHitHealthObject -= OnHitHealthObject;
 
-            base.ReleaseObject(obj);
+            base.OnRelease(obj);
         }
 
         private void OnHitHealthObject(IHealthObject healthObject)

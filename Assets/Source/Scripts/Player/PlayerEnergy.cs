@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 namespace Source.Scripts.Player
@@ -6,6 +7,8 @@ namespace Source.Scripts.Player
     {
         [SerializeField] private float _teleportCost = 1f;
         [SerializeField] private float _amount = 10f;
+
+        public event Action OnOutOfEnergy;
         
         public bool TryUseEnergy()
         {
@@ -14,6 +17,7 @@ namespace Source.Scripts.Player
             if (_amount < 0)
             {
                 _amount = 0f;
+                OnOutOfEnergy?.Invoke();
                 return false;
             }
             

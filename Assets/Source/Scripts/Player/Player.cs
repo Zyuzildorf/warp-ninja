@@ -1,3 +1,4 @@
+using System;
 using Source.Scripts.Game;
 using Source.Scripts.Interfaces;
 using Source.Scripts.Other;
@@ -30,6 +31,9 @@ namespace Source.Scripts.Player
         private Collider _collider;
 
         public InputReader InputReader { get; private set; }
+        
+        public event Action OnOutOfEnergy;
+        public event Action OnDie;
 
         private void Awake()
         {
@@ -54,6 +58,7 @@ namespace Source.Scripts.Player
         private void OnEnable()
         {
             _health.OnDeath += Die;
+            _energy.OnOutOfEnergy += HandleOutOfEnergy;
         }
 
         private void OnDisable()
@@ -93,6 +98,12 @@ namespace Source.Scripts.Player
         private void Die()
         {
             _stateMachine.SetState(_dieState);
+            OnDie?.Invoke();
+        }
+
+        private void HandleOutOfEnergy()
+        {
+            OnOutOfEnergy?.Invoke();
         }
     }
 }

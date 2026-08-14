@@ -10,7 +10,7 @@ namespace Source.Scripts.Player.PlayerStates
 
         public override void Enter()
         {
-            Debug.Log("You die");
+           // Debug.Log("You die");
         }
     }
 }
